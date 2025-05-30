@@ -20,3 +20,17 @@ pub fn get_all_campionati() -> Json<Vec<Campionato>> {
     Json(get_all_scudetti())
 }
 
+// A route that finds championships by year
+#[get("/scudetto/<year>")]
+pub fn get_campionato_by_year(year: u32) -> Json<Campionato> {
+    let all_campionati = get_all_scudetti();
+    for scudetto in &all_campionati {
+        if scudetto.year == year {
+            return Json(scudetto.clone());
+        }
+    }
+    Json(all_campionati[0].clone())
+} 
+
+
+
