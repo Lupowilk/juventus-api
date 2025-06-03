@@ -1,5 +1,6 @@
 use rocket::serde::json::Json;
 use rocket::get;
+use rocket::http::Status;
 use crate::models::Campionato;
 use crate::data::get_all_scudetti;
 
@@ -22,14 +23,14 @@ pub fn get_all_campionati() -> Json<Vec<Campionato>> {
 
 // A route that finds championships by year
 #[get("/scudetto/<year>")]
-pub fn get_campionato_by_year(year: u32) -> Json<Campionato> {
+pub fn get_campionato_by_year(year: u32) -> Result<Json<Campionato>, Status> {
     let all_campionati = get_all_scudetti();
     for scudetto in &all_campionati {
         if scudetto.year == year {
-            return Json(scudetto.clone());
+            return Ok(Json(scudetto.clone()));
         }
     }
-    Json(all_campionati[0].clone())
+    Err(Status::NotFound)
 } 
 
 
